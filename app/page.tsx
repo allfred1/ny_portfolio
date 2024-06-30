@@ -35,7 +35,7 @@ export default function Home() {
                 animate="visible"
             >
                 <motion.div
-                    className="rounded-3xl border-2 border-black dark:border-white relative min-h-36 col-span-1 md:col-span-4 overflow-hidden"
+                    className="rounded-3xl border-2 border-black dark:border-white relative min-h-36 col-span-4 sm:col-span-2 overflow-hidden"
                     variants={itemVariants}
                 >
                     <Title>Stack</Title>
@@ -49,7 +49,7 @@ export default function Home() {
                     href="https://oldiberezko.t.me/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="col-span-1 sm:col-span-1"
+                    className="col-span-4 sm:col-span-1"
                     variants={itemVariants}
                 >
                     <div className="rounded-3xl border-2 border-black dark:border-white relative min-h-36 flex flex-col justify-between group overflow-hidden cursor-pointer p-4">
@@ -59,13 +59,13 @@ export default function Home() {
                                 Hello 👋
                             </Title>
                         </div>
-                        <div className="flex items-center gap-4">
+                        <div className="flex items-center p-6">
                             <div className="message p-2 border border-black dark:border-white rounded-full bg-black text-white dark:bg-white dark:text-black">
                                 <span className="flex items-center text-[12px] px-2">
                                     What&quot;s, oldiberezko <Typewriter />
                                 </span>
                             </div>
-                            <div className="p-2 border rounded-full border-white dark:border-black group-hover:bg-black dark:group-hover:bg-white">
+                            <div className="p-3 border rounded-full border-white dark:border-black group-hover:bg-black dark:group-hover:bg-white group-hover:mx-4 animated">
                                 <BsSend size={18} className="text-white dark:text-black" />
                             </div>
                         </div>
@@ -73,7 +73,7 @@ export default function Home() {
                 </motion.a>
 
                 <motion.div
-                    className="col-span-1 row-span-2 sm:col-span-1 min-h-12 rounded-3xl border-2 border-black dark:border-white relative overflow-hidden p-6"
+                    className=" row-span-2 col-span-4 sm:col-span-1 min-h-56 rounded-3xl border-2 border-black dark:border-white relative overflow-hidden p-6"
                     variants={itemVariants}
                 >
                     <Link href="projects">
@@ -94,12 +94,12 @@ export default function Home() {
                 </motion.div>
 
                 <motion.div
-                    className="col-span-1 min-h-56 rounded-3xl border-2 border-black dark:border-white relative overflow-hidden bg-[#121214] p-6"
+                    className="sm:col-span-1 col-span-4 min-h-56 rounded-3xl border-2 border-black dark:border-white relative overflow-hidden  p-6"
                     variants={itemVariants}
                 >
                     <Link href="about">
-                        <motion.div className="flex items-center justify-center text-white z-40">oldiberezko</motion.div>
-                        <motion.div className="absolute left-1/2 transform -translate-x-1/2 z-20">
+                        <motion.div className="flex items-center justify-center text-black dark:text-white z-40">oldiberezko</motion.div>
+                        {/* <motion.div className="absolute left-1/2 transform -translate-x-1/2 z-20">
                             <div className="flex flex-col gap-1 items-center">
                                 {"about".split("").map((item, index) => (
                                     <span key={index} className="font-bold mix-blend-hard-light text-white">
@@ -107,7 +107,7 @@ export default function Home() {
                                     </span>
                                 ))}
                             </div>
-                        </motion.div>
+                        </motion.div> */}
                         <Image
                             src={Bedrock}
                             alt="Bedrock card background figure"
