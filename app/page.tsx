@@ -1,5 +1,5 @@
 import Title from "@/components/Framer/Title";
-import Carousel from "@/components/Framer/carousel";
+import Carousel from "@/components/Framer/Carousel";
 export default function Home() {
     return (
         <>
