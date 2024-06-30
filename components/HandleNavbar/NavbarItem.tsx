@@ -1,24 +1,22 @@
-// use client directive
-"use client";
+"use client"
 
-import { motion } from "framer-motion";
-import { useRef, useState, useEffect } from "react";
-import Link from "next/link";
+import { motion } from "framer-motion"
+import { useRef, useState, useEffect } from "react"
+import Link from "next/link"
 
-// Define a type for individual navigation items
 interface INavItem {
-    id: string;
-    title: string;
-    href: string;
+  id: string
+  title: string
+  href: string
 }
 
-// Props type for NavbarItems component
 interface IIProps {
-    items: INavItem[];
-    currentPath: string;
+  items: INavItem[]
+  currentPath: string
+  isMobile?: boolean
 }
 
-export default function NavbarItems({ items, currentPath }: IIProps) {
+export default function NavbarItems({ items, currentPath, isMobile = false }: IIProps) {
     const [position, setPosition] = useState<{ left: number; width: number; opacity: number }>({
         left: 0,
         width: 0,
@@ -51,48 +49,67 @@ export default function NavbarItems({ items, currentPath }: IIProps) {
         }
     }, [items, currentPath]);
 
-    return (
-        <ul
-            ref={listRef}
-            className="overflow-hidden relative flex-row items-center gap-1 p-2 rounded-[80px] dark:border-[#EBEBEB] border border-[#141414] sm:flex hidden"
-            onMouseLeave={() => setPosition(activePosition)}
-        >
-            {items.map((item, index) => (
-                <li
-                    onMouseEnter={() => {
-                        if (listRef.current && listRef.current.children[index]) {
-                            const node = listRef.current.children[index] as HTMLElement;
-                            const { left, width } = node.getBoundingClientRect();
-                            const listLeft = listRef.current.getBoundingClientRect().left;
-                            setPosition({
-                                left: left - listLeft,
-                                width,
-                                opacity: 1,
-                            });
-                        }
-                    }}
-                    className={`p-3 rounded-[80px] leading-5 z-10 cursor-pointer animate ${
-                        listRef.current &&
-                        listRef.current.children[index] &&
-                        position.left ===
-                            (listRef.current.children[index] as HTMLElement).getBoundingClientRect().left -
-                                listRef.current.getBoundingClientRect().left
-                            ? "dark:text-black text-white"  // Ensures text color changes based on the theme
-                            : "dark:text-white text-black"
-                    }`}
-                    key={item.id}
-                >
-                    <Link href={item.href} className="text-[16px] font-normal">
-                        {item.title}
-                    </Link>
-                </li>
-            ))}
-            <motion.li
-                animate={position}
-                transition={transition}
-                className="absolute z-0 h-[44px] w-16 rounded-[80px] bg-[#1d1d1d] dark:bg-[#EBEBEB] mx-[4px] animate"
-            />
-        </ul>
-    );
-}
 
+
+
+  if (isMobile) {
+    return (
+      <ul className="flex w-full flex-col">
+        {items.map((item) => (
+          <li key={item.id} className="py-2">
+            <Link
+              href={item.href}
+              className={`text-[16px] font-normal ${currentPath === item.href ? "font-bold" : ""}`}
+            >
+              {item.title}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+
+  return (
+    <ul
+      ref={listRef}
+      className="relative hidden flex-row items-center gap-1 overflow-hidden rounded-[80px] border border-[#141414] p-2 dark:border-[#EBEBEB] sm:flex"
+      onMouseLeave={() => setPosition(activePosition)}
+    >
+      {items.map((item, index) => (
+        <li
+          onMouseEnter={() => {
+            if (listRef.current && listRef.current.children[index]) {
+              const node = listRef.current.children[index] as HTMLElement
+              const { left, width } = node.getBoundingClientRect()
+              const listLeft = listRef.current.getBoundingClientRect().left
+              setPosition({
+                left: left - listLeft,
+                width,
+                opacity: 1,
+              })
+            }
+          }}
+          className={`animate z-10 cursor-pointer rounded-[80px] p-3 leading-5 ${
+            listRef.current &&
+            listRef.current.children[index] &&
+            position.left ===
+              (listRef.current.children[index] as HTMLElement).getBoundingClientRect().left -
+                listRef.current.getBoundingClientRect().left
+              ? "text-white dark:text-black"
+              : "text-black dark:text-white"
+          }`}
+          key={item.id}
+        >
+          <Link href={item.href} className="text-[16px] font-normal">
+            {item.title}
+          </Link>
+        </li>
+      ))}
+      <motion.li
+        animate={position}
+        transition={transition}
+        className="animate absolute z-0 mx-[4px] h-[44px] w-16 rounded-[80px] bg-[#1d1d1d] dark:bg-[#EBEBEB]"
+      />
+    </ul>
+  )
+}
