@@ -76,7 +76,7 @@ export default function Home() {
           className="relative col-span-4 row-span-2 min-h-56 overflow-hidden rounded-3xl border-2 border-black p-6 dark:border-white sm:col-span-1"
           variants={itemVariants}
         >
-          <Link href="projects">
+          <Link href="Projects">
             <motion.div className="absolute z-10 rounded-full px-2 backdrop-blur">
               <span className="text-3xl font-bold text-black dark:text-white">Projects</span>
             </motion.div>
@@ -93,7 +93,7 @@ export default function Home() {
           className="relative col-span-4 min-h-56 overflow-hidden rounded-3xl border-2 border-black p-6 dark:border-white sm:col-span-1"
           variants={itemVariants}
         >
-          <Link href="about">
+          <Link href="About">
             <motion.div className="z-40 flex items-center justify-center text-black dark:text-white">
               oldiberezko
             </motion.div>

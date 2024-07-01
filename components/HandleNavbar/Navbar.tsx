@@ -27,7 +27,7 @@ export default function Navbar() {
   }, [darkTheme])
 
   const currentPath = usePathname()
-  const items: INavbar[] = useGenerator(["About", "Projects"], currentPath)
+  const items: INavbar[] = useGenerator(["About", "Projects", "Reviews"], currentPath)
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
 
