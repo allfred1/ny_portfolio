@@ -17,40 +17,37 @@ interface IIProps {
 }
 
 export default function NavbarItems({ items, currentPath, isMobile = false }: IIProps) {
-    const [position, setPosition] = useState<{ left: number; width: number; opacity: number }>({
-        left: 0,
-        width: 0,
-        opacity: 0,
-    });
-    const [activePosition, setActivePosition] = useState<{ left: number; width: number; opacity: number }>({
-        left: 0,
-        width: 0,
-        opacity: 0,
-    });
-    const listRef = useRef<HTMLUListElement>(null);
+  const [position, setPosition] = useState<{ left: number; width: number; opacity: number }>({
+    left: 0,
+    width: 0,
+    opacity: 0,
+  })
+  const [activePosition, setActivePosition] = useState<{ left: number; width: number; opacity: number }>({
+    left: 0,
+    width: 0,
+    opacity: 0,
+  })
+  const listRef = useRef<HTMLUListElement>(null)
 
-    const transition = { type: "spring", stiffness: 300, damping: 20 };
+  const transition = { type: "spring", stiffness: 300, damping: 20 }
 
-    useEffect(() => {
-        if (listRef.current && listRef.current.children.length > 0) {
-            const activeIndex = items.findIndex((item) => currentPath === item.href);
-            if (activeIndex !== -1) {
-                const activeItem = listRef.current.children[activeIndex] as HTMLElement;
-                const { left, width } = activeItem.getBoundingClientRect();
-                const listLeft = listRef.current.getBoundingClientRect().left;
-                const newActivePosition = {
-                    left: left - listLeft,
-                    width,
-                    opacity: 1,
-                };
-                setPosition(newActivePosition);
-                setActivePosition(newActivePosition);
-            }
+  useEffect(() => {
+    if (listRef.current && listRef.current.children.length > 0) {
+      const activeIndex = items.findIndex((item) => currentPath === item.href)
+      if (activeIndex !== -1) {
+        const activeItem = listRef.current.children[activeIndex] as HTMLElement
+        const { left, width } = activeItem.getBoundingClientRect()
+        const listLeft = listRef.current.getBoundingClientRect().left
+        const newActivePosition = {
+          left: left - listLeft,
+          width,
+          opacity: 1,
         }
-    }, [items, currentPath]);
-
-
-
+        setPosition(newActivePosition)
+        setActivePosition(newActivePosition)
+      }
+    }
+  }, [items, currentPath])
 
   if (isMobile) {
     return (
