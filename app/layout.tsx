@@ -5,7 +5,7 @@ import UiLayout from "@/layout/UiLayout"
 const poppins = Poppins({ subsets: ["latin-ext"], weight: ["400", "700", "600"], preload: true })
 
 export const metadata: Metadata = {
-  title: "oldiberezko - fullstack dev",
+  title: "oldiberezko - frontend dev",
   description: "personal website  a web dev",
   keywords: "nextjs, tailwindcss, typescript, javascript, css, html, git, github, github actions",
 }
