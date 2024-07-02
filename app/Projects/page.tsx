@@ -9,21 +9,126 @@ const CACHE_KEY = "github_repos_cache"
 const CACHE_EXPIRATION: number = 24 * 60 * 60 * 1000 // 24 hours in milliseconds
 
 interface IRepo {
-  id: number
-  name: string
-  description: string | null
-  html_url: string
-  created_at: string
-  stargazers_count: number
-  forks_count: number
-  watchers_count: number
+  id?: number
+  node_id?: string
+  name?: string
+  full_name?: string
+  private?: boolean
+  data?: any
+  owner?: {
+    login?: string
+    id?: number
+    node_id?: string
+    avatar_url?: string
+    gravatar_id?: string
+    url?: string
+    html_url?: string
+    followers_url?: string
+    following_url?: string
+    gists_url?: string
+    starred_url?: string
+    subscriptions_url?: string
+    organizations_url?: string
+    repos_url?: string
+    events_url?: string
+    received_events_url?: string
+    type?: string
+    site_admin?: boolean
+  }
+  html_url?: string
+  description?: string | null
+  fork?: boolean
+  url?: string
+  created_at?: string
+  updated_at?: string
+  pushed_at?: string
+  homepage?: string | null
+  size?: number
+  stargazers_count?: number
+  watchers_count?: number
+  language?: string | null
+  forks_count?: number
+  open_issues_count?: number
+  forks?: number
+  open_issues?: number
+  watchers?: number
+  default_branch?: string
+
+  stars?: number
+  forks_url?: string
+  keys_url?: string
+  collaborators_url?: string
+  teams_url?: string
+  hooks_url?: string
+  issue_events_url?: string
+  events_url?: string
+  assignees_url?: string
+  branches_url?: string
+  tags_url?: string
+  blobs_url?: string
+  git_tags_url?: string
+  git_refs_url?: string
+  trees_url?: string
+  statuses_url?: string
+  languages_url?: string
+  stargazers_url?: string
+  contributors_url?: string
+  subscribers_url?: string
+  subscription_url?: string
+  commits_url?: string
+  git_commits_url?: string
+  comments_url?: string
+  issue_comment_url?: string
+  contents_url?: string
+  compare_url?: string
+  merges_url?: string
+  archive_url?: string
+  downloads_url?: string
+  issues_url?: string
+  pulls_url?: string
+  milestones_url?: string
+  notifications_url?: string
+  labels_url?: string
+  releases_url?: string
+  deployments_url?: string
+  git_url?: string
+  ssh_url?: string
+  clone_url?: string
+  svn_url?: string
+  has_issues?: boolean
+  has_projects?: boolean
+  has_downloads?: boolean
+  has_wiki?: boolean
+  has_pages?: boolean
+  has_discussions?: boolean
+  mirror_url?: string | null
+  archived?: boolean
+  disabled?: boolean
+  license?: {
+    key?: string
+    name?: string
+    spdx_id?: string
+    url?: string
+    node_id?: string
+  } | null
+  allow_forking?: boolean
+  is_template?: boolean
+  web_commit_signoff_required?: boolean
+  topics?: string[]
+  visibility?: string
 }
 
 interface ICachedData {
-  data: IRepo[]
-  timestamp: number
+  data?: IRepo[]
+  timestamp?: number | undefined
 }
 
+interface ITab {
+  id?: string
+  label?: string
+}
+
+type SortOption = "Relevance" | "Stars" | "Date"
 const fallbackData: IRepo[] = [
   {
     id: 750309823,
@@ -392,18 +497,17 @@ export default function Projects() {
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
 
-  const tabs = [
+  const tabs: ITab[] = [
     { id: "projects", label: "Projects" },
     { id: "productions", label: "Productions" },
   ]
-
   useEffect(() => {
     const fetchRepos = async () => {
       try {
         const cachedData = localStorage.getItem(CACHE_KEY)
         if (cachedData) {
-          const { data, timestamp }: ICachedData = JSON.parse(cachedData)
-          if (Date.now() - timestamp < CACHE_EXPIRATION) {
+          const { data, timestamp = Date.now() } = JSON.parse(cachedData) as ICachedData
+          if (data && Date.now() - timestamp < CACHE_EXPIRATION) {
             setRepos(data)
             setIsLoading(false)
             return
@@ -412,20 +516,26 @@ export default function Projects() {
 
         const response = await fetch("https://api.github.com/users/allfred1/repos")
         if (!response.ok) {
-          throw new Error("Failed to fetch data")
+          throw new Error(`HTTP error! status: ${response.status}`)
         }
-        const data: IRepo[] = await response.json()
-        setRepos(data)
-        localStorage.setItem(CACHE_KEY, JSON.stringify({ data, timestamp: Date.now() }))
+        const fetchedData: IRepo[] = await response.json()
+        setRepos(fetchedData)
+        localStorage.setItem(CACHE_KEY, JSON.stringify({ data: fetchedData, timestamp: Date.now() }))
       } catch (error) {
         console.error("Error fetching data:", error)
         setError(error instanceof Error ? error.message : String(error))
+
+        // Восстановление из кэша при ошибке, если есть сохраненные данные
         const cachedData = localStorage.getItem(CACHE_KEY)
         if (cachedData) {
-          const { data }: ICachedData = JSON.parse(cachedData)
-          setRepos(data)
+          const { data } = JSON.parse(cachedData) as ICachedData
+          if (data) {
+            setRepos(data)
+          } else {
+            setRepos([]) // Установка пустого массива или других фоллбэк-данных по вашему выбору
+          }
         } else {
-          setRepos(fallbackData)
+          setRepos([]) // Установка пустого массива или других фоллбэк-данных по вашему выбору
         }
       } finally {
         setIsLoading(false)
@@ -433,16 +543,21 @@ export default function Projects() {
     }
 
     fetchRepos()
-  }, [])
+  }, []) // Пустой массив зависимостей для однократного выполнения эффекта
 
-  const sortedRepos = [...repos].sort((a, b) => {
-    if (sortOption === "Stars") {
-      return b.stargazers_count - a.stargazers_count
-    } else if (sortOption === "Date") {
-      return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-    }
-    return 0
-  })
+const sortedRepos = [...repos].sort((a, b) => {
+  switch (sortOption) {
+    case "Stars":
+      return (b.stargazers_count ?? 0) - (a.stargazers_count ?? 0)
+    case "Date":
+      const dateA = a.created_at ? new Date(a.created_at).getTime() : 0
+      const dateB = b.created_at ? new Date(b.created_at).getTime() : 0
+      return dateB - dateA
+    default:
+      return 0
+  }
+})
+
 
   if (isLoading) {
     return <div className="flex h-screen items-center justify-center">Loading...</div>
