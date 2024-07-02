@@ -13,7 +13,7 @@ interface IIProps {
 export default async function UiLayout({ children }: IIProps) {
   return (
     <>
-      <header className="sticky top-0">
+      <header className="sticky top-0 backdrop-blur-xl z-[5010] rounded-full">
         <Navbar />
       </header>
 

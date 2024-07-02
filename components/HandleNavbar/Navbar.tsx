@@ -27,7 +27,7 @@ export default function Navbar() {
   }, [darkTheme])
 
   const currentPath = usePathname()
-  const items: INavbar[] = useGenerator(["About", "Projects", "Reviews"], currentPath)
+  const items: INavbar[] = useGenerator(["About", "Projects"], currentPath)
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
 
@@ -75,6 +75,14 @@ export default function Navbar() {
             }}
           >
             <NavbarItems items={items} currentPath={currentPath} isMobile={true} />
+            <button
+              onClick={toggleTheme}
+              className="rounded-[80px] border-2 border-black p-3 text-sm dark:border-white sm:p-4 sm:text-base"
+            >
+              <span className="rounded-[80px] bg-black p-1 text-white dark:bg-white dark:text-black sm:p-2">
+                {darkTheme ? "light theme" : "dark theme"}
+              </span>
+            </button>
           </motion.div>
         )}
       </AnimatePresence>

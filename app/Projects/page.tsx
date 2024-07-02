@@ -453,7 +453,7 @@ export default function Projects() {
               <span className="text-[18px] capitalize">{tab.label}</span>
               {activeTab === tab.id ? (
                 <motion.div
-                  className="line absolute bottom-[-8px] h-1 w-[80%] rounded-md bg-black"
+                  className="line absolute bottom-[-8px] h-1 w-[80%] rounded-md bg-black dark:bg-white"
                   layoutId="activeTab"
                   initial={{ opacity: 0, scale: 0 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -461,7 +461,7 @@ export default function Projects() {
                 />
               ) : (
                 <motion.div
-                  className="line absolute bottom-[-8px] h-1 w-[80%] rounded-md bg-black"
+                  className="line absolute bottom-[-8px] h-1 w-[80%] rounded-md bg-black bg-white"
                   initial={{ opacity: 0, scale: 0 }}
                   variants={{
                     hover: { opacity: 1, scale: 1 },
@@ -482,7 +482,7 @@ export default function Projects() {
         ))}
       </div>
       {error && (
-        <div className="mt-4 text-3xl border-red-500 border-2 p-4 rounded-lg">
+        <div className="mt-4 rounded-lg border-2 border-red-500 p-4 text-3xl">
           Note: There was an error fetching the latest data. Displaying cached or fallback data.
         </div>
       )}

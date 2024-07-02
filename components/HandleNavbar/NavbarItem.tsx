@@ -1,5 +1,4 @@
 "use client"
-
 import { motion } from "framer-motion"
 import { useRef, useState, useEffect } from "react"
 import Link from "next/link"
@@ -31,7 +30,7 @@ export default function NavbarItems({ items, currentPath, isMobile = false }: II
 
   const transition = { type: "spring", stiffness: 300, damping: 20 }
 
-  useEffect(() => {
+  const updateActivePosition = () => {
     if (listRef.current && listRef.current.children.length > 0) {
       const activeIndex = items.findIndex((item) => currentPath === item.href)
       if (activeIndex !== -1) {
@@ -46,6 +45,14 @@ export default function NavbarItems({ items, currentPath, isMobile = false }: II
         setPosition(newActivePosition)
         setActivePosition(newActivePosition)
       }
+    }
+  }
+
+  useEffect(() => {
+    updateActivePosition()
+    window.addEventListener("resize", updateActivePosition)
+    return () => {
+      window.removeEventListener("resize", updateActivePosition)
     }
   }, [items, currentPath])
 
