@@ -8,16 +8,27 @@ import { FaCodeFork } from "react-icons/fa6"
 import { IoPeopleSharp } from "react-icons/io5"
 import { CiCalendarDate } from "react-icons/ci"
 
-interface IIProps {
-  repo: object | null | undefined;
+interface IRepo {
+  id: number
+  name: string
+  description: string | null
+  html_url: string
+  created_at: string
+  stargazers_count: number
+  forks_count: number
+  watchers_count: number
 }
 
-export default function Card({ repo }: IIProps) {
+interface ICardProps {
+  repo: IRepo
+}
+
+export default function Card({ repo }: ICardProps) {
   const createdDate = new Date(repo.created_at).toLocaleDateString()
 
-  const handleStarClick = (e) => {
-    e.preventDefault() // Предотвращаем открытие карточки
-    window.open(repo.html_url, "_blank") // Открываем страницу репозитория в новой вкладке
+  const handleStarClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+    window.open(repo.html_url, "_blank") 
   }
 
   return (

@@ -6,9 +6,25 @@ import DropMenu from "@/components/Framer/DropMenu"
 import Card from "./Card"
 
 const CACHE_KEY = "github_repos_cache"
-const CACHE_EXPIRATION = 24 * 60 * 60 * 1000 // 24 hours in milliseconds
+const CACHE_EXPIRATION: number = 24 * 60 * 60 * 1000 // 24 hours in milliseconds
 
-const fallbackData = [
+interface IRepo {
+  id: number
+  name: string
+  description: string | null
+  html_url: string
+  created_at: string
+  stargazers_count: number
+  forks_count: number
+  watchers_count: number
+}
+
+interface ICachedData {
+  data: IRepo[]
+  timestamp: number
+}
+
+const fallbackData: IRepo[] = [
   {
     id: 750309823,
     node_id: "R_kgDOLLjRvw",
@@ -370,11 +386,11 @@ const fallbackData = [
 ]
 
 export default function Projects() {
-  const [activeTab, setActiveTab] = useState("projects")
-  const [repos, setRepos] = useState([])
-  const [sortOption, setSortOption] = useState("Relevance")
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const [activeTab, setActiveTab] = useState<string>("projects")
+  const [repos, setRepos] = useState<IRepo[]>([])
+  const [sortOption, setSortOption] = useState<string>("Relevance")
+  const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [error, setError] = useState<string | null>(null)
 
   const tabs = [
     { id: "projects", label: "Projects" },
@@ -386,7 +402,7 @@ export default function Projects() {
       try {
         const cachedData = localStorage.getItem(CACHE_KEY)
         if (cachedData) {
-          const { data, timestamp } = JSON.parse(cachedData)
+          const { data, timestamp }: ICachedData = JSON.parse(cachedData)
           if (Date.now() - timestamp < CACHE_EXPIRATION) {
             setRepos(data)
             setIsLoading(false)
@@ -398,15 +414,15 @@ export default function Projects() {
         if (!response.ok) {
           throw new Error("Failed to fetch data")
         }
-        const data = await response.json()
+        const data: IRepo[] = await response.json()
         setRepos(data)
         localStorage.setItem(CACHE_KEY, JSON.stringify({ data, timestamp: Date.now() }))
       } catch (error) {
         console.error("Error fetching data:", error)
-        setError(error.message)
+        setError(error instanceof Error ? error.message : String(error))
         const cachedData = localStorage.getItem(CACHE_KEY)
         if (cachedData) {
-          const { data } = JSON.parse(cachedData)
+          const { data }: ICachedData = JSON.parse(cachedData)
           setRepos(data)
         } else {
           setRepos(fallbackData)
@@ -423,7 +439,7 @@ export default function Projects() {
     if (sortOption === "Stars") {
       return b.stargazers_count - a.stargazers_count
     } else if (sortOption === "Date") {
-      return new Date(b.created_at) - new Date(a.created_at)
+      return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
     }
     return 0
   })
@@ -461,7 +477,7 @@ export default function Projects() {
                 />
               ) : (
                 <motion.div
-                  className="line absolute bottom-[-8px] h-1 w-[80%] rounded-md bg-black bg-white"
+                  className="line absolute bottom-[-8px] h-1 w-[80%] rounded-md bg-black dark:bg-white"
                   initial={{ opacity: 0, scale: 0 }}
                   variants={{
                     hover: { opacity: 1, scale: 1 },
