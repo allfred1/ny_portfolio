@@ -117,7 +117,7 @@ export default function Home() {
           <Title>Experience</Title>
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-2">
-              <NumberAnimator target={7} />
+              <NumberAnimator target={4} />
               <span className="text-xl font-bold text-black dark:text-white">The Years</span>
             </div>
             <div className="flex items-center gap-2">
